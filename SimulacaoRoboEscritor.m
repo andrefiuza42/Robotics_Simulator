@@ -82,6 +82,9 @@ for i_L=1:qtd_letras
     if letra == 'A'    
         escreveLetraA(max_sim_iter, posicaoInicial, [0; 1; 0])
     end
+    if letra == 'D'    
+        escreveLetraD(max_sim_iter, posicaoInicial, [0; 1; 0])
+    end
 end
 
 % Volta para a posição inicial após escrever
@@ -136,6 +139,33 @@ function escreveLetraA(ksim, posicaoInicial, oriz_des)
     % Linha horizontal do meio de A
     pos_horizontal_meio = [-t y_des pos_des_z];
     simulaRobo(20, pos_horizontal_meio, oriz_des, NuvemMeioA, true);
+    
+end
+
+function escreveLetraD(ksim, posicaoInicial, oriz_des)
+    global CenarioEscrita
+    t = sym('t');
+
+    NuvemD = NuvemPontos([],[],[],[0 0 1],'-');
+    CenarioEscrita.adicionaobjetos(NuvemD);
+    
+    % Valor sempre constante
+    y_des = posicaoInicial(2);
+    % Posiciona efetuador na posição inicial de escrita da letra D
+    simulaRobo(ksim + 10, posicaoInicial, oriz_des, false, false)
+    
+    % Perna vertical de D (subindo) --> | 
+    pos_horizontal_sup = [posicaoInicial(1) y_des t];
+    simulaRobo(70, pos_horizontal_sup, oriz_des, NuvemD, true);
+    
+    % Segmento de reta direito do D
+    pos_des_z =  posicaoInicial(3)*2/3;
+    pos_horizontal_sup = [t y_des pos_des_z];
+    simulaRobo(70, pos_horizontal_sup, oriz_des, NuvemD, true);
+
+    % Perna horizontal do D (direita para esquerda) --> ____ 
+    pos_horizontal_inf = [-t y_des posicaoInicial(3)];
+    simulaRobo(60, pos_horizontal_inf, oriz_des, NuvemD, true);
     
 end
 
